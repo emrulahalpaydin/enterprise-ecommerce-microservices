@@ -1,0 +1,34 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build artifacts
+bin/
+obj/
+publish/
+*/bin/
+*/obj/
+
+# JetBrains
+.idea/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Dotnet
+project.lock.json
+artifacts/
+
+# Docker
+docker-compose.override.yml
+
+# Local envs
+.env
+.env.local

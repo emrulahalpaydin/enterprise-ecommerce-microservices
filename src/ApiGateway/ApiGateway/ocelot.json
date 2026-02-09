@@ -1,0 +1,159 @@
+{
+  "Routes": [
+    {
+      "Key": "Identity",
+      "UpstreamPathTemplate": "/api/auth",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "identity-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "IdentityCatchAll",
+      "UpstreamPathTemplate": "/api/auth{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/auth{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "identity-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "CatalogProducts",
+      "UpstreamPathTemplate": "/api/products",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "catalog-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "CatalogProductsCatchAll",
+      "UpstreamPathTemplate": "/api/products{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/products{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "catalog-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "CatalogCategories",
+      "UpstreamPathTemplate": "/api/categories",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "catalog-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "CatalogCategoriesCatchAll",
+      "UpstreamPathTemplate": "/api/categories{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/categories{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "catalog-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "Orders",
+      "UpstreamPathTemplate": "/api/orders",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/orders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "order-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "OrdersCatchAll",
+      "UpstreamPathTemplate": "/api/orders{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/orders{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "order-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "Basket",
+      "UpstreamPathTemplate": "/api/basket",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/basket",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "order-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "BasketCatchAll",
+      "UpstreamPathTemplate": "/api/basket{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/basket{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "order-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "Payments",
+      "UpstreamPathTemplate": "/api/payments",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/payments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "payment-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "PaymentsCatchAll",
+      "UpstreamPathTemplate": "/api/payments{**catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/payments{**catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "payment-api", "Port": 8080 } ],
+      "EnableRateLimiting": true,
+      "RateLimitOptions": { "Period": "1s", "Limit": 20 }
+    },
+    {
+      "Key": "SwaggerIdentity",
+      "UpstreamPathTemplate": "/swagger/identity/{version}/swagger.json",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/swagger/{version}/swagger.json",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "identity-api", "Port": 8080 } ]
+    },
+    {
+      "Key": "SwaggerCatalog",
+      "UpstreamPathTemplate": "/swagger/catalog/{version}/swagger.json",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/swagger/{version}/swagger.json",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "catalog-api", "Port": 8080 } ]
+    },
+    {
+      "Key": "SwaggerOrder",
+      "UpstreamPathTemplate": "/swagger/order/{version}/swagger.json",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/swagger/{version}/swagger.json",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "order-api", "Port": 8080 } ]
+    },
+    {
+      "Key": "SwaggerPayment",
+      "UpstreamPathTemplate": "/swagger/payment/{version}/swagger.json",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/swagger/{version}/swagger.json",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "payment-api", "Port": 8080 } ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://api-gateway:8080"
+  }
+}

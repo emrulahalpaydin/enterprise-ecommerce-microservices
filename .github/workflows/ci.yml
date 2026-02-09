@@ -1,0 +1,29 @@
+﻿name: ci
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore Microservices.ECommerce.sln
+
+      - name: Build
+        run: dotnet build Microservices.ECommerce.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test Microservices.ECommerce.sln -c Release --no-build

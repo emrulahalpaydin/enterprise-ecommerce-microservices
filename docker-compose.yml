@@ -1,0 +1,209 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  identity-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${IDENTITY_DB_NAME}
+      POSTGRES_USER: ${IDENTITY_DB_USER}
+      POSTGRES_PASSWORD: ${IDENTITY_DB_PASSWORD}
+    ports:
+      - "${IDENTITY_DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${IDENTITY_DB_USER} -d ${IDENTITY_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  catalog-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${CATALOG_DB_NAME}
+      POSTGRES_USER: ${CATALOG_DB_USER}
+      POSTGRES_PASSWORD: ${CATALOG_DB_PASSWORD}
+    ports:
+      - "${CATALOG_DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CATALOG_DB_USER} -d ${CATALOG_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  order-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${ORDER_DB_NAME}
+      POSTGRES_USER: ${ORDER_DB_USER}
+      POSTGRES_PASSWORD: ${ORDER_DB_PASSWORD}
+    ports:
+      - "${ORDER_DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ORDER_DB_USER} -d ${ORDER_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  payment-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${PAYMENT_DB_NAME}
+      POSTGRES_USER: ${PAYMENT_DB_USER}
+      POSTGRES_PASSWORD: ${PAYMENT_DB_PASSWORD}
+    ports:
+      - "${PAYMENT_DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PAYMENT_DB_USER} -d ${PAYMENT_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  identity-api:
+    build:
+      context: .
+      dockerfile: src/IdentityService/IdentityService.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: identity
+      AdminBootstrap__Secret: ${AdminBootstrap__Secret}
+      RabbitMq__HostName: ${RabbitMq__HostName}
+      RabbitMq__Port: ${RabbitMq__Port}
+      RabbitMq__UserName: ${RabbitMq__UserName}
+      RabbitMq__Password: ${RabbitMq__Password}
+      RabbitMq__VirtualHost: ${RabbitMq__VirtualHost}
+      RabbitMq__ExchangeName: ${RabbitMq__ExchangeName}
+      RabbitMq__ServiceName: identity-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      identity-db:
+        condition: service_healthy
+    ports:
+      - "5001:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  catalog-api:
+    build:
+      context: .
+      dockerfile: src/CatalogService/CatalogService.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: identity
+      RabbitMq__HostName: ${RabbitMq__HostName}
+      RabbitMq__Port: ${RabbitMq__Port}
+      RabbitMq__UserName: ${RabbitMq__UserName}
+      RabbitMq__Password: ${RabbitMq__Password}
+      RabbitMq__VirtualHost: ${RabbitMq__VirtualHost}
+      RabbitMq__ExchangeName: ${RabbitMq__ExchangeName}
+      RabbitMq__ServiceName: catalog-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      catalog-db:
+        condition: service_healthy
+    ports:
+      - "5002:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  order-api:
+    build:
+      context: .
+      dockerfile: src/OrderService/OrderService.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: identity
+      RabbitMq__HostName: ${RabbitMq__HostName}
+      RabbitMq__Port: ${RabbitMq__Port}
+      RabbitMq__UserName: ${RabbitMq__UserName}
+      RabbitMq__Password: ${RabbitMq__Password}
+      RabbitMq__VirtualHost: ${RabbitMq__VirtualHost}
+      RabbitMq__ExchangeName: ${RabbitMq__ExchangeName}
+      RabbitMq__ServiceName: order-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      order-db:
+        condition: service_healthy
+    ports:
+      - "5003:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  payment-api:
+    build:
+      context: .
+      dockerfile: src/PaymentService/PaymentService.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: identity
+      RabbitMq__HostName: ${RabbitMq__HostName}
+      RabbitMq__Port: ${RabbitMq__Port}
+      RabbitMq__UserName: ${RabbitMq__UserName}
+      RabbitMq__Password: ${RabbitMq__Password}
+      RabbitMq__VirtualHost: ${RabbitMq__VirtualHost}
+      RabbitMq__ExchangeName: ${RabbitMq__ExchangeName}
+      RabbitMq__ServiceName: payment-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      payment-db:
+        condition: service_healthy
+    ports:
+      - "5004:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/ApiGateway/ApiGateway/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: identity
+    depends_on:
+      identity-api:
+        condition: service_healthy
+      catalog-api:
+        condition: service_healthy
+      order-api:
+        condition: service_healthy
+      payment-api:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
